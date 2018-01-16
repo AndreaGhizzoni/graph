@@ -6,6 +6,8 @@
 .idea
 build
 out
+graph.iml
+
 # Compiled class file
 *.class
 
