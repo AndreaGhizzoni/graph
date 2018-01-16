@@ -1,27 +1,47 @@
 package it.unitn.disi.graph;
 
+import java.util.Optional;
+import java.util.Random;
+
 public class Launcher {
     public static void main( String...args ){
         Graph g = new Graph();
 
         String[] nodeNames = {"A", "B", "C", "D", "E", "F", "G", "H"};
-        for( String name : nodeNames ){
-            g.addNode( name, null );
+        String[][] edges = {
+            {"A", "H"},
+            {"A", "F"},
+            {"A", "G"},
+            {"B", "D"},
+            {"B", "H"},
+            {"C", "E"},
+            {"C", "A"},
+            {"D", "F"},
+            {"D", "H"},
+            {"E", "D"},
+            {"F", "F"},
+            {"G", "A"},
+            {"H", "C"},
+        };
+
+        Random r = new Random(System.currentTimeMillis());
+        for( String name : nodeNames ) {
+            if( name.equals("A") )
+                g.addNode(name, 10);
+            else{
+                g.addNode(name, r.nextInt(10));
+            }
         }
 
-        try {
-            g.addNeighbor("A", "H", "F", "G");
-            g.addNeighbor("B", "B", "G", "C");
-            g.addNeighbor("C", "E", "A");
-            g.addNeighbor("D", "F", "H");
-            g.addNeighbor("E", "D");
-            g.addNeighbor("F", "F");
-            g.addNeighbor("G", "A");
-            g.addNeighbor("H", "C");
-        } catch (Exception e) {
-            e.printStackTrace();
+        for( String[] edge: edges ){
+            String from = edge[0];
+            String to = edge[1];
+            try {
+                g.addEdge( from, to );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
 
         System.out.println("List of Nodes:");
         g.getNodes().forEach( node ->
@@ -32,5 +52,15 @@ public class Launcher {
         g.getEdges().forEach( edge ->
             System.out.println( edge.toString() )
         );
+
+        Object data = 10;
+        System.out.println("Searching for data: "+data.toString());
+        Optional<Node> searchedNode = g.searchForData( data );
+        if( searchedNode.isPresent() ){
+            System.out.println("Node with searched data: "+searchedNode.get().getName());
+        }else{
+            System.out.println("No node found");
+        }
+
     }
 }

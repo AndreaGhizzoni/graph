@@ -1,50 +1,86 @@
 package it.unitn.disi.graph;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Graph {
-    private ArrayList<Node> V = new ArrayList<>();
-    private ArrayList<Edge> E = new ArrayList<>();
+    private HashSet<Node> V = new HashSet<>();
+    private HashSet<Edge> E = new HashSet<>();
 
     public void addNode( String name, Object data ){
         V.add( new Node(name, data) );
     }
 
-    public void addNeighbor( String name, String...neighbors ) throws Exception {
-        Node node = searchNodeForNameOrThrow( name );
+    public void addEdge( String nameFrom, String nameTo ) throws Exception {
+        Node from = searchForName( nameFrom ).orElseThrow(
+            () -> new NodeNotFoundException( nameFrom )
+        );
+        Node to = searchForName( nameTo ).orElseThrow(
+            () -> new NodeNotFoundException( nameTo )
+        );
 
-        ArrayList<Node> neighborsNode = new ArrayList<>();
-        for( String neighbor : neighbors ){
-            neighborsNode.add( searchNodeForNameOrThrow( neighbor ) );
-        }
-
-        for( Node n : neighborsNode ){
-            node.addNeighbor( n );
-            E.add( new Edge(node, n) );
-        }
+        from.addNeighbor( to );
+        E.add( new Edge(from, to) );
     }
 
-    private Node searchNodeForNameOrThrow( String name ) throws Exception {
-        Optional<Node> optNode = V.stream()
-            .filter(n -> n.getName().equals(name))
-            .findFirst();
-
-        if( !optNode.isPresent() ) {
-            throw new Exception(
-                String.format("Neighbor %s not found in graph", name)
-            );
+    public Optional<Node> searchForName( String name ){
+        Optional<Node> optNodeFound = Optional.empty();
+        for( Node v : V ){
+            if( !(boolean)v.getProperties(Node.VISITED) ) {
+                Optional<Node> opt = searchForProperties( Node.NAME, name, v );
+                if( opt.isPresent() ) optNodeFound = opt;
+            }
         }
-        return optNode.get();
+
+        resetVisited();
+        return optNodeFound;
     }
 
-    public List<Node> getNodes(){
-        return Collections.unmodifiableList( this.V );
+    public Optional<Node> searchForData( Object data ){
+        Optional<Node> optNodeFound = Optional.empty();
+        for( Node v : V ){
+            if( !(boolean)v.getProperties(Node.VISITED) ) {
+                Optional<Node> opt = searchForProperties( Node.DATA, data, v );
+                if( opt.isPresent() ) optNodeFound = opt;
+            }
+        }
+
+        resetVisited();
+        return optNodeFound;
     }
 
-    public List<Edge> getEdges(){
-        return Collections.unmodifiableList( this.E );
+    private Optional<Node> searchForProperties( String key, Object value, Node start ){
+        Optional<Node> optNodeFound = Optional.empty();
+
+        LinkedList<Node> queue = new LinkedList<>();
+        start.addProperties( Node.VISITED, true );
+        queue.add( start );
+        while( !queue.isEmpty() && !optNodeFound.isPresent() ){
+            Node currentNode = queue.remove();
+            Object currentNodeValue = currentNode.getProperties( key );
+            if( currentNodeValue != null  && currentNodeValue.equals(value) ) {
+                optNodeFound = Optional.of( currentNode );
+            }else{
+                for( Node neighbor : currentNode.getNeighbors() ){
+                    if( !(boolean)neighbor.getProperties(Node.VISITED) ) {
+                        neighbor.addProperties( Node.VISITED, true );
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        return optNodeFound;
+    }
+
+    private void resetVisited(){
+        V.forEach( v -> v.addProperties(Node.VISITED, false) );
+    }
+
+    public Set<Node> getNodes(){
+        return Collections.unmodifiableSet( this.V );
+    }
+
+    public Set<Edge> getEdges(){
+        return Collections.unmodifiableSet( this.E );
     }
 }
