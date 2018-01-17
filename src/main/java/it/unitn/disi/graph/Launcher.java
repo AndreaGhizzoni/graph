@@ -20,14 +20,17 @@ public class Launcher {
 
         final boolean[] isFirstLine = {true};
         try( Stream<String> stream = Files.lines(graphPath) ){
-            stream.parallel().forEach( line ->{
-                if( isFirstLine[0] ){
-                    nodeNames = line.split( " " );
-                    isFirstLine[0] = false;
-                }else{
-                    edges.add( line.split( " " ) );
-                }
-            });
+            stream.parallel()
+                .filter( s -> !s.isEmpty() )
+                .filter( s -> !s.startsWith( "#" ) )
+                .forEach( line ->{
+                    if( isFirstLine[0] ){
+                        nodeNames = line.split( " " );
+                        isFirstLine[0] = false;
+                    }else{
+                        edges.add( line.split( " " ) );
+                    }
+                });
         }catch( IOException e ){
             e.printStackTrace();
         }
