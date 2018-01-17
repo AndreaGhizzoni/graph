@@ -63,7 +63,7 @@ public class Launcher {
             System.out.println("No node found");
         }
 
-        String fromNode = nodeNames[0];
+        String fromNode = "D";
         System.out.println("=== Compute Erdos from: "+fromNode);
         try {
             g.erdos( fromNode );
@@ -73,10 +73,10 @@ public class Launcher {
                 n.getName(), (Integer)n.getProperties( Node.ERDOS )
             ));
 
-            String start = "A";
-            String end = "D";
-            String walk = g.getWalk( start, end );
-            System.out.println( walk );
+            for( String end : nodeNames ) {
+                System.out.printf("Walk from %s to %s:\n", fromNode, end);
+                System.out.println(g.getWalk(fromNode, end));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
