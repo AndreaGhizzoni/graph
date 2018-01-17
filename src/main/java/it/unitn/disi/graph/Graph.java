@@ -10,16 +10,20 @@ public class Graph {
         V.add( new Node(name, data) );
     }
 
-    public void addEdge( String nameFrom, String nameTo ) throws Exception {
-        Node from = getNodeFromName( nameFrom ).orElseThrow(
-            () -> new NodeNotFoundException( nameFrom )
-        );
-        Node to = getNodeFromName( nameTo ).orElseThrow(
-            () -> new NodeNotFoundException( nameTo )
-        );
+    public void addEdge( String nameFrom, String nameTo ) {
+        try{
+            Node from = getNodeFromName( nameFrom ).orElseThrow(
+                () -> new NodeNotFoundException( nameFrom )
+            );
+            Node to = getNodeFromName( nameTo ).orElseThrow(
+                () -> new NodeNotFoundException( nameTo )
+            );
 
-        from.addNeighbor( to );
-        E.add( new Edge(from, to) );
+            from.addNeighbor( to );
+            E.add( new Edge(from, to) );
+        }catch( NodeNotFoundException e ){
+            System.err.println( e.getMessage() );
+        }
     }
 
     public void erdos( String from ) throws Exception {

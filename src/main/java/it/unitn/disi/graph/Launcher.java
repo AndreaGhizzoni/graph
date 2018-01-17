@@ -35,27 +35,20 @@ public class Launcher {
 
     public static void main( String...args ){
         new Launcher().readGraph();
+        if( nodeNames.length == 0 ){
+            System.err.println( "Node list not found" );
+            System.exit( 1 );
+        }
 
         Graph g = new Graph();
 
         Random r = new Random(System.currentTimeMillis());
-        for( String name : nodeNames ) {
-            if( name.equals("A") )
-                g.addNode(name, 10);
-            else{
-                g.addNode(name, r.nextInt(10));
-            }
-        }
+        for( String name : nodeNames )
+            g.addNode( name, r.nextInt(11) );
 
-        for( String[] edge: edges ){
-            String from = edge[0];
-            String to = edge[1];
-            try {
-                g.addEdge( from, to );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        for( String[] edge: edges )
+            g.addEdge( edge[0], edge[1] );
+
 
         System.out.println("=== List of Nodes:");
         g.getNodes().forEach( node ->
@@ -68,10 +61,11 @@ public class Launcher {
         );
 
         Object data = 10;
-        System.out.println("=== Searching for data: "+data.toString());
+        System.out.println("=== Searching node with data: "+data.toString());
         Optional<Node> searchedNode = g.getNodeFromData( data );
         if( searchedNode.isPresent() ){
-            System.out.println("Node with searched data: "+searchedNode.get().getName());
+            Node n = searchedNode.get();
+            System.out.println("Node with selected data: "+n.getName());
         }else{
             System.out.println("No node found");
         }
