@@ -22,6 +22,29 @@ public class Graph {
         E.add( new Edge(from, to) );
     }
 
+    public void erdos( String from ) throws Exception {
+        Node fromNode = searchForName( from ).orElseThrow(
+            () -> new NodeNotFoundException( from )
+        );
+
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add( fromNode );
+        fromNode.addProperties( Node.ERDOS, 0 );
+        fromNode.addProperties( Node.FATHER, null );
+        while( !queue.isEmpty() ){
+            Node currentNode = queue.remove();
+            Integer erdosCN = (Integer)currentNode.getProperties( Node.ERDOS );
+            for( Node neighbor : currentNode.getNeighbors() ){
+                Integer erdosNeighbor = (Integer) neighbor.getProperties( Node.ERDOS );
+                if( erdosNeighbor.equals(-1) ){
+                    neighbor.addProperties( Node.ERDOS, erdosCN+1 );
+                    neighbor.addProperties( Node.FATHER, currentNode );
+                    queue.add( neighbor );
+                }
+            }
+        }
+    }
+
     public Optional<Node> searchForName( String name ){
         Optional<Node> optNodeFound = Optional.empty();
         for( Node v : V ){

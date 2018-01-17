@@ -1,5 +1,6 @@
 package it.unitn.disi.graph;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
@@ -62,5 +63,18 @@ public class Launcher {
             System.out.println("No node found");
         }
 
+        String fromNode = nodeNames[0];
+        System.out.println("Compute Erdos from: "+fromNode);
+        try {
+            g.erdos( fromNode );
+
+            g.getNodes().forEach( n -> System.out.printf(
+                "%s: %d\n",
+                n.getName(), (Integer)n.getProperties( Node.ERDOS )
+            ));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

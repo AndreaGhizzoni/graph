@@ -9,12 +9,16 @@ public class Node {
     public static final String DATA="data";
     public static final String VISITED="visited";
     public static final String NAME="name";
+    public static final String ERDOS="erdos";
+    public static final String FATHER="father";
     private HashMap<String, Object> properties = new HashMap<>();
 
     Node( String name, Object data ){
         this.setName( name );
         this.addProperties(DATA, data);
         this.addProperties(VISITED, false);
+        this.addProperties(ERDOS, -1);
+        this.addProperties(FATHER, null);
     }
 
     void setName(String name) { this.addProperties(NAME, name); }
@@ -27,7 +31,7 @@ public class Node {
         this.properties.put( key, value );
     }
 
-    public Object getProperties(String key ){
+    public Object getProperties( String key ){
         return this.properties.getOrDefault( key, new Object() );
     }
 
