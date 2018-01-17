@@ -99,6 +99,10 @@ public class Graph {
         V.forEach( v -> v.addProperties(Node.VISITED, false) );
     }
 
+    private void resetErdos(){
+        V.forEach( v -> v.addProperties(Node.ERDOS, -1) );
+    }
+
     public Set<Node> getNodes(){
         return Collections.unmodifiableSet( this.V );
     }

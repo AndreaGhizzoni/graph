@@ -44,18 +44,18 @@ public class Launcher {
             }
         }
 
-        System.out.println("List of Nodes:");
+        System.out.println("=== List of Nodes:");
         g.getNodes().forEach( node ->
             System.out.println( node.toString() )
         );
 
-        System.out.println("List of Edges:");
+        System.out.println("=== List of Edges:");
         g.getEdges().forEach( edge ->
             System.out.println( edge.toString() )
         );
 
         Object data = 10;
-        System.out.println("Searching for data: "+data.toString());
+        System.out.println("=== Searching for data: "+data.toString());
         Optional<Node> searchedNode = g.searchForData( data );
         if( searchedNode.isPresent() ){
             System.out.println("Node with searched data: "+searchedNode.get().getName());
@@ -64,7 +64,7 @@ public class Launcher {
         }
 
         String fromNode = nodeNames[0];
-        System.out.println("Compute Erdos from: "+fromNode);
+        System.out.println("=== Compute Erdos from: "+fromNode);
         try {
             g.erdos( fromNode );
 
