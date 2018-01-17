@@ -1,5 +1,5 @@
 # this is a comment
-A B C D E F G H
+A B C D E F G H I L M N O P Q R
 A H
 A F
 A G
@@ -14,3 +14,12 @@ E D
 F F
 G A
 H C
+
+I L
+L M
+M N
+N O
+O P
+P Q
+Q R
+R I
