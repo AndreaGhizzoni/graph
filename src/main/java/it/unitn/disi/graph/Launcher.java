@@ -1,6 +1,5 @@
 package it.unitn.disi.graph;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
