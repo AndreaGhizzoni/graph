@@ -35,7 +35,7 @@ public class Graph {
             Node currentNode = queue.remove();
             Integer erdosCN = (Integer)currentNode.getProperties( Node.ERDOS );
             for( Node neighbor : currentNode.getNeighbors() ){
-                Integer erdosNeighbor = (Integer) neighbor.getProperties( Node.ERDOS );
+                Integer erdosNeighbor = (Integer)neighbor.getProperties( Node.ERDOS );
                 if( erdosNeighbor.equals(-1) ){
                     neighbor.addProperties( Node.ERDOS, erdosCN+1 );
                     neighbor.addProperties( Node.FATHER, currentNode );
@@ -49,7 +49,8 @@ public class Graph {
         Optional<Node> optNodeFound = Optional.empty();
         for( Node v : V ){
             if( !(boolean)v.getProperties(Node.VISITED) ) {
-                Optional<Node> opt = getFromProperties( Node.NAME, name, v );
+//                Optional<Node> opt = BFS( Node.NAME, name, v );
+                Optional<Node> opt = DFS( Node.NAME, name, v );
                 if( opt.isPresent() ) optNodeFound = opt;
             }
         }
@@ -62,7 +63,8 @@ public class Graph {
         Optional<Node> optNodeFound = Optional.empty();
         for( Node v : V ){
             if( !(boolean)v.getProperties(Node.VISITED) ) {
-                Optional<Node> opt = getFromProperties( Node.DATA, data, v );
+//                Optional<Node> opt = BFS( Node.DATA, data, v );
+                Optional<Node> opt = DFS( Node.DATA, data, v );
                 if( opt.isPresent() ) optNodeFound = opt;
             }
         }
@@ -71,7 +73,7 @@ public class Graph {
         return optNodeFound;
     }
 
-    private Optional<Node> getFromProperties( String key, Object value, Node start ){
+    private Optional<Node> BFS( String key, Object value, Node start ){
         Optional<Node> optNodeFound = Optional.empty();
 
         LinkedList<Node> queue = new LinkedList<>();
@@ -94,6 +96,26 @@ public class Graph {
 
         return optNodeFound;
     }
+
+    private Optional<Node> DFS( String key, Object value, Node currentNode ){
+        Optional<Node> optNodeFound = Optional.empty();
+
+        currentNode.addProperties( Node.VISITED, true );
+        Object currentNodeValue = currentNode.getProperties( key );
+        if( currentNodeValue != null && currentNodeValue.equals(value) ){
+            optNodeFound = Optional.of( currentNode );
+        }else{
+            for( Node neighbor : currentNode.getNeighbors() ){
+                if( !(boolean)neighbor.getProperties(Node.VISITED) ) {
+                    Optional<Node> dfsRes = DFS( key, value, neighbor );
+                    if( dfsRes.isPresent() )
+                        optNodeFound = dfsRes;
+                }
+            }
+        }
+
+        return optNodeFound;
+   }
 
     private void resetVisited(){
         V.forEach( v -> v.addProperties(Node.VISITED, false) );
