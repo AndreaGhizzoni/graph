@@ -11,42 +11,25 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 public class Launcher {
-    static String[] nodeNames;
-    static ArrayList<String[]> edges = new ArrayList<>();
-    static Graph g;
+    private static String[] nodeNames;
+    private static ArrayList<String[]> edges = new ArrayList<>();
 
-    public void readGraph(){
+    private void readGraph(){
         URL urlGraph = getClass().getClassLoader().getResource( "g1.graph" );
         Path graphPath = Paths.get( urlGraph.getFile() );
 
+        final boolean[] isFirstLine = {true};
         try( Stream<String> stream = Files.lines(graphPath) ){
-            final int[] lines = {0};
             stream.forEach( line ->{
-                if( lines[0] == 0 ){
+                if( isFirstLine[0] ){
                     nodeNames = line.split( " " );
+                    isFirstLine[0] = false;
                 }else{
-                    edges.add( line.split(" ") );
+                    edges.add( line.split( " " ) );
                 }
-
-                lines[0]++;
-            } );
+            });
         }catch( IOException e ){
             e.printStackTrace();
-        }
-    }
-
-    public static void Tmain( String...args ){
-        Launcher l = new Launcher();
-        l.readGraph();
-
-        for( String s : nodeNames )
-            System.out.printf("%s ",s );
-        System.out.println();
-
-        for( String[] edge: edges ){
-            String from = edge[0];
-            String to = edge[1];
-            System.out.printf("%s -> %s\n", from, to);
         }
     }
 
@@ -54,7 +37,7 @@ public class Launcher {
         Launcher l = new Launcher();
         l.readGraph();
 
-        g = new Graph();
+        Graph g = new Graph();
 //        String[] nodeNames = {"A", "B", "C", "D", "E", "F", "G", "H"};
 //        String[][] edges = {
 //            {"A", "H"},
