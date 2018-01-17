@@ -100,7 +100,33 @@ public class Graph {
     }
 
     private void resetErdos(){
-        V.forEach( v -> v.addProperties(Node.ERDOS, -1) );
+        V.forEach( v -> {
+            v.addProperties(Node.ERDOS, -1);
+            v.addProperties(Node.FATHER, null);
+        });
+    }
+
+    public String getWalk( String start, String end ) throws Exception {
+        Node s = searchForName( start ).orElseThrow(
+            () -> new NodeNotFoundException( start )
+        );
+        Node e = searchForName( end ).orElseThrow(
+            () -> new NodeNotFoundException( end )
+        );
+        StringBuilder b = new StringBuilder();
+        getWalk( s, e, b );
+        return b.toString();
+    }
+
+    private void getWalk( Node start, Node end, StringBuilder b ){
+        if( start.equals(end) ){
+            b.append( start.getName()+" " );
+        }else if( end != null && end.getProperties( Node.FATHER ) == null ){
+            b.append( "No walk from start to end" );
+        }else{
+            getWalk( start, (Node)end.getProperties(Node.FATHER), b );
+            b.append( end.getName()+" " );
+        }
     }
 
     public Set<Node> getNodes(){

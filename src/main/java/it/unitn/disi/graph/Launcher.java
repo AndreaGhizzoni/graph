@@ -73,6 +73,10 @@ public class Launcher {
                 n.getName(), (Integer)n.getProperties( Node.ERDOS )
             ));
 
+            String start = "A";
+            String end = "D";
+            String walk = g.getWalk( start, end );
+            System.out.println( walk );
         } catch (Exception e) {
             e.printStackTrace();
         }
