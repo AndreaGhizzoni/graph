@@ -1,28 +1,76 @@
 package it.unitn.disi.graph;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Launcher {
-    public static void main( String...args ){
-        Graph g = new Graph();
+    static String[] nodeNames;
+    static ArrayList<String[]> edges = new ArrayList<>();
+    static Graph g;
 
-        String[] nodeNames = {"A", "B", "C", "D", "E", "F", "G", "H"};
-        String[][] edges = {
-            {"A", "H"},
-            {"A", "F"},
-            {"A", "G"},
-            {"B", "D"},
-            {"B", "H"},
-            {"C", "E"},
-            {"C", "A"},
-            {"D", "F"},
-            {"D", "H"},
-            {"E", "D"},
-            {"F", "F"},
-            {"G", "A"},
-            {"H", "C"},
-        };
+    public void readGraph(){
+        URL urlGraph = getClass().getClassLoader().getResource( "g1.graph" );
+        Path graphPath = Paths.get( urlGraph.getFile() );
+
+        try( Stream<String> stream = Files.lines(graphPath) ){
+            final int[] lines = {0};
+            stream.forEach( line ->{
+                if( lines[0] == 0 ){
+                    nodeNames = line.split( " " );
+                }else{
+                    edges.add( line.split(" ") );
+                }
+
+                lines[0]++;
+            } );
+        }catch( IOException e ){
+            e.printStackTrace();
+        }
+    }
+
+    public static void Tmain( String...args ){
+        Launcher l = new Launcher();
+        l.readGraph();
+
+        for( String s : nodeNames )
+            System.out.printf("%s ",s );
+        System.out.println();
+
+        for( String[] edge: edges ){
+            String from = edge[0];
+            String to = edge[1];
+            System.out.printf("%s -> %s\n", from, to);
+        }
+    }
+
+    public static void main( String...args ){
+        Launcher l = new Launcher();
+        l.readGraph();
+
+        g = new Graph();
+//        String[] nodeNames = {"A", "B", "C", "D", "E", "F", "G", "H"};
+//        String[][] edges = {
+//            {"A", "H"},
+//            {"A", "F"},
+//            {"A", "G"},
+//            {"B", "D"},
+//            {"B", "H"},
+//            {"C", "E"},
+//            {"C", "A"},
+//            {"D", "F"},
+//            {"D", "H"},
+//            {"E", "D"},
+//            {"F", "F"},
+//            {"G", "A"},
+//            {"H", "C"},
+//        };
 
         Random r = new Random(System.currentTimeMillis());
         for( String name : nodeNames ) {
