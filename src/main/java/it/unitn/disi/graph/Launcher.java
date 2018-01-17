@@ -34,26 +34,9 @@ public class Launcher {
     }
 
     public static void main( String...args ){
-        Launcher l = new Launcher();
-        l.readGraph();
+        new Launcher().readGraph();
 
         Graph g = new Graph();
-//        String[] nodeNames = {"A", "B", "C", "D", "E", "F", "G", "H"};
-//        String[][] edges = {
-//            {"A", "H"},
-//            {"A", "F"},
-//            {"A", "G"},
-//            {"B", "D"},
-//            {"B", "H"},
-//            {"C", "E"},
-//            {"C", "A"},
-//            {"D", "F"},
-//            {"D", "H"},
-//            {"E", "D"},
-//            {"F", "F"},
-//            {"G", "A"},
-//            {"H", "C"},
-//        };
 
         Random r = new Random(System.currentTimeMillis());
         for( String name : nodeNames ) {
