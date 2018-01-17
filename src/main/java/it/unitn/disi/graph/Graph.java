@@ -11,10 +11,10 @@ public class Graph {
     }
 
     public void addEdge( String nameFrom, String nameTo ) throws Exception {
-        Node from = searchForName( nameFrom ).orElseThrow(
+        Node from = getNodeFromName( nameFrom ).orElseThrow(
             () -> new NodeNotFoundException( nameFrom )
         );
-        Node to = searchForName( nameTo ).orElseThrow(
+        Node to = getNodeFromName( nameTo ).orElseThrow(
             () -> new NodeNotFoundException( nameTo )
         );
 
@@ -23,7 +23,7 @@ public class Graph {
     }
 
     public void erdos( String from ) throws Exception {
-        Node fromNode = searchForName( from ).orElseThrow(
+        Node fromNode = getNodeFromName( from ).orElseThrow(
             () -> new NodeNotFoundException( from )
         );
 
@@ -45,11 +45,11 @@ public class Graph {
         }
     }
 
-    public Optional<Node> searchForName( String name ){
+    public Optional<Node> getNodeFromName( String name ){
         Optional<Node> optNodeFound = Optional.empty();
         for( Node v : V ){
             if( !(boolean)v.getProperties(Node.VISITED) ) {
-                Optional<Node> opt = searchForProperties( Node.NAME, name, v );
+                Optional<Node> opt = getFromProperties( Node.NAME, name, v );
                 if( opt.isPresent() ) optNodeFound = opt;
             }
         }
@@ -58,11 +58,11 @@ public class Graph {
         return optNodeFound;
     }
 
-    public Optional<Node> searchForData( Object data ){
+    public Optional<Node> getNodeFromData( Object data ){
         Optional<Node> optNodeFound = Optional.empty();
         for( Node v : V ){
             if( !(boolean)v.getProperties(Node.VISITED) ) {
-                Optional<Node> opt = searchForProperties( Node.DATA, data, v );
+                Optional<Node> opt = getFromProperties( Node.DATA, data, v );
                 if( opt.isPresent() ) optNodeFound = opt;
             }
         }
@@ -71,7 +71,7 @@ public class Graph {
         return optNodeFound;
     }
 
-    private Optional<Node> searchForProperties( String key, Object value, Node start ){
+    private Optional<Node> getFromProperties( String key, Object value, Node start ){
         Optional<Node> optNodeFound = Optional.empty();
 
         LinkedList<Node> queue = new LinkedList<>();
@@ -107,10 +107,10 @@ public class Graph {
     }
 
     public String getWalk( String start, String end ) throws Exception {
-        Node s = searchForName( start ).orElseThrow(
+        Node s = getNodeFromName( start ).orElseThrow(
             () -> new NodeNotFoundException( start )
         );
-        Node e = searchForName( end ).orElseThrow(
+        Node e = getNodeFromName( end ).orElseThrow(
             () -> new NodeNotFoundException( end )
         );
         StringBuilder b = new StringBuilder();

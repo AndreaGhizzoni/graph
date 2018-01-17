@@ -55,7 +55,7 @@ public class Launcher {
 
         Object data = 10;
         System.out.println("=== Searching for data: "+data.toString());
-        Optional<Node> searchedNode = g.searchForData( data );
+        Optional<Node> searchedNode = g.getNodeFromData( data );
         if( searchedNode.isPresent() ){
             System.out.println("Node with searched data: "+searchedNode.get().getName());
         }else{
