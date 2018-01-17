@@ -20,7 +20,7 @@ public class Launcher {
 
         final boolean[] isFirstLine = {true};
         try( Stream<String> stream = Files.lines(graphPath) ){
-            stream.forEach( line ->{
+            stream.parallel().forEach( line ->{
                 if( isFirstLine[0] ){
                     nodeNames = line.split( " " );
                     isFirstLine[0] = false;
@@ -110,5 +110,16 @@ public class Launcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("=== Compute Connected Components");
+        Integer ccFound = g.computeConnectedComponents();
+        System.out.printf("Found %d connected components:\n",ccFound);
+        g.getNodes().forEach( node ->
+            System.out.printf(
+                "cc(%s) = %d\n",
+                node.getName(),
+                (Integer)node.getProperties( Node.CC_ID )
+            )
+        );
     }
 }

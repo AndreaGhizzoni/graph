@@ -151,6 +151,25 @@ public class Graph {
         }
     }
 
+    public Integer computeConnectedComponents(){
+        int counter = 0;
+        for( Node v : V ){
+            if( ((Integer)v.getProperties( Node.CC_ID )).equals(-1) ){
+                ccDFS( v, ++counter );
+            }
+        }
+        return counter;
+    }
+
+    public void ccDFS( Node currentNode, int counter ){
+        currentNode.addProperties( Node.CC_ID, counter );
+        for( Node neighbor : currentNode.getNeighbors() ){
+            if( ((Integer)neighbor.getProperties( Node.CC_ID )).equals(-1) ){
+                ccDFS( neighbor, counter );
+            }
+        }
+    }
+
     public Set<Node> getNodes(){
         return Collections.unmodifiableSet( this.V );
     }

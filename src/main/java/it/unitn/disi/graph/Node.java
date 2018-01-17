@@ -11,6 +11,7 @@ public class Node {
     public static final String NAME="name";
     public static final String ERDOS="erdos";
     public static final String FATHER="father";
+    public static final String CC_ID="cc";
     private HashMap<String, Object> properties = new HashMap<>();
 
     Node( String name, Object data ){
@@ -19,6 +20,7 @@ public class Node {
         this.addProperties(VISITED, false);
         this.addProperties(ERDOS, -1);
         this.addProperties(FATHER, null);
+        this.addProperties(CC_ID, -1);
     }
 
     void setName(String name) { this.addProperties(NAME, name); }
@@ -43,7 +45,7 @@ public class Node {
     public String toString(){
         StringBuilder b = new StringBuilder();
         b.append("- ").append( getProperties(NAME) );
-        b.append("(").append(String.format("%5s", getProperties(DATA))).append(")");
+        b.append("(").append(String.format("%2s", getProperties(DATA))).append(")");
 
         b.append(" -> [ ");
         for( Node n : neighbors )
