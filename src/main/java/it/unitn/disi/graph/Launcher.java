@@ -75,20 +75,14 @@ public class Launcher {
 
         String fromNode = "D";
         System.out.println("=== Compute Erdos from: "+fromNode);
-        try {
-            g.erdos( fromNode );
-
-            g.getNodes().forEach( n -> System.out.printf(
-                "%s: %d\n",
-                n.getName(), (Integer)n.getProperties( Node.ERDOS )
-            ));
-
-            for( String end : nodeNames ) {
-                System.out.printf("Walk from %s to %s:\n", fromNode, end);
-                System.out.println(g.getWalk(fromNode, end));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        g.erdos( fromNode );
+        g.getNodes().forEach( n -> System.out.printf(
+            "%s: %d\n",
+            n.getName(), (Integer)n.getProperties( Node.ERDOS )
+        ));
+        for( String end : nodeNames ) {
+            System.out.printf("Walk from %s to %s:\n", fromNode, end);
+            System.out.println( g.getWalk(fromNode, end) );
         }
 
         System.out.println("=== Compute Connected Components");

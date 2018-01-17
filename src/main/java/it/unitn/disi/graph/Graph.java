@@ -26,10 +26,16 @@ public class Graph {
         }
     }
 
-    public void erdos( String from ) throws Exception {
-        Node fromNode = getNodeFromName( from ).orElseThrow(
-            () -> new NodeNotFoundException( from )
-        );
+    public void erdos( String from ) {
+        Node fromNode = null;
+        try{
+            fromNode = getNodeFromName( from ).orElseThrow(
+                () -> new NodeNotFoundException( from )
+            );
+        }catch( NodeNotFoundException e ){
+            System.err.println( e.getMessage() );
+            return;
+        }
 
         LinkedList<Node> queue = new LinkedList<>();
         queue.add( fromNode );
@@ -132,15 +138,19 @@ public class Graph {
         });
     }
 
-    public String getWalk( String start, String end ) throws Exception {
-        Node s = getNodeFromName( start ).orElseThrow(
-            () -> new NodeNotFoundException( start )
-        );
-        Node e = getNodeFromName( end ).orElseThrow(
-            () -> new NodeNotFoundException( end )
-        );
+    public String getWalk( String start, String end ) {
         StringBuilder b = new StringBuilder();
-        getWalk( s, e, b );
+        try{
+            Node s = getNodeFromName( start ).orElseThrow(
+                () -> new NodeNotFoundException( start )
+            );
+            Node e = getNodeFromName( end ).orElseThrow(
+                () -> new NodeNotFoundException( end )
+            );
+            getWalk( s, e, b );
+        }catch( NodeNotFoundException e ){
+            System.err.println( e.getMessage() );
+        }
         return b.toString();
     }
 
