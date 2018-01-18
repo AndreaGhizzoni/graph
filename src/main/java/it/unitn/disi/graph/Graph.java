@@ -27,7 +27,7 @@ public class Graph {
     }
 
     public void erdos( String from ) {
-        Node fromNode = null;
+        Node fromNode;
         try{
             fromNode = getNodeFromName( from ).orElseThrow(
                 () -> new NodeNotFoundException( from )
