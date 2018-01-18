@@ -14,6 +14,35 @@ public class Launcher {
     private static String[] nodeNames;
     private static ArrayList<String[]> edges = new ArrayList<>();
 
+    private void readMatrix(){
+        URL urlGraph = getClass().getClassLoader().getResource( "g1.matrix" );
+        Path graphPath = Paths.get( urlGraph.getFile() );
+
+        final int[] isFirstLine = {0,0};
+        try( Stream<String> stream = Files.lines(graphPath) ){
+            stream.parallel()
+                .filter( s -> !s.isEmpty() )
+                .filter( s -> !s.startsWith( "#" ) )
+                .forEach( line ->{
+                    String[] split = line.split( " " );
+                    if( isFirstLine[0] == 0 ){
+                        nodeNames = split;
+                        isFirstLine[0] = 1;
+                    }else{
+                        String from = nodeNames[isFirstLine[1]];
+                        for( int i=0; i<split.length; i++ ){
+                            if( split[i].equals("1") ){
+                                edges.add( new String[]{from, nodeNames[i]} );
+                            }
+                        }
+                        isFirstLine[1]++;
+                    }
+                });
+        }catch( IOException e ){
+            e.printStackTrace();
+        }
+    }
+
     private void readGraph(){
         URL urlGraph = getClass().getClassLoader().getResource( "g1.graph" );
         Path graphPath = Paths.get( urlGraph.getFile() );
@@ -37,7 +66,7 @@ public class Launcher {
     }
 
     public static void main( String...args ){
-        new Launcher().readGraph();
+        new Launcher().readMatrix();
         if( nodeNames.length == 0 ){
             System.err.println( "Node list not found" );
             System.exit( 1 );
